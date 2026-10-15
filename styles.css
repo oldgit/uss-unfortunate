@@ -1,0 +1,147 @@
+:root {
+  color-scheme: dark;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f1f5ff;
+  background: #03060f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 240px;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.nebula-background {
+  position: fixed;
+  inset: 0;
+  /* Repeat a native-resolution crop so stars stay sharp and proportional. */
+  background: url("./assets/dark-stars.jpg") left top / 400px 240px repeat;
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+}
+
+.nebula-background::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  /* Scale proportionally and anchor the bright core (44%, 53%) at the corner.
+     Both minimum sizes ensure the image covers this lower-half region. */
+  --nebula-width: max(228vw, 168vh);
+  background-image: url("./assets/nebula.jpg");
+  background-repeat: no-repeat;
+  background-size: var(--nebula-width) auto;
+  background-position:
+    calc(100vw - var(--nebula-width) * .44)
+    calc(50vh - var(--nebula-width) * .5625 * .53);
+  mask-image: linear-gradient(to bottom, transparent, #000 40%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
+}
+
+.soundboard {
+  width: min(100% - 40px, 400px);
+  margin: 12px auto;
+  text-align: center;
+}
+
+.subtitle {
+  margin: 6px 0 12px;
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.6px;
+}
+
+.subtitle a {
+  color: inherit;
+  text-decoration-color: #93b8ed;
+  text-underline-offset: 4px;
+}
+
+.subtitle a:hover,
+.subtitle a.is-playing { color: #a9d2ff; }
+.subtitle a:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
+
+.spaceship {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  /* Scale continuously so crossing the compact breakpoint cannot enlarge it abruptly. */
+  max-height: 20vh;
+  max-height: 20svh;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 12px 36px #0008;
+}
+
+.sounds {
+  display: grid;
+  gap: 10px;
+  max-width: 320px;
+  margin-inline: auto;
+}
+
+.button-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+button { font: inherit; }
+
+.sound {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 12px;
+  color: #151a18;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  transition: filter 120ms ease, transform 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.sound--yellow { background: #ffdf50; }
+.sound--orange { background: #ffbd59; }
+.sound--red { background: #d51f2b; color: #fff; }
+.sound--green { background: #79d84d; }
+.sound:hover { filter: brightness(.94); }
+.sound:active { transform: translateY(2px); }
+.sound.is-playing { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #353c39; }
+button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
+.outcomes { margin-top: 0; }
+
+.playback { margin-top: 12px; }
+.playback p { min-height: 1.3em; margin: 0 0 6px; color: #c5d2e6; font-size: .85rem; }
+#stop-sound {
+  padding: 8px 14px;
+  border: 1px solid #b8bfbb;
+  border-radius: 7px;
+  background: #101c30;
+  color: #f1f5ff;
+  cursor: pointer;
+  min-height: 40px;
+}
+#stop-sound:disabled { opacity: .45; cursor: default; }
+
+@media (max-width: 400px) {
+  .sounds { max-width: 240px; }
+}
+
+/* Keep the full control stack in view on shorter laptop and mobile screens. */
+@media (max-height: 800px) {
+  .sounds { gap: 8px; }
+  .sound { min-height: 44px; padding-block: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound { transition: none; }
+}

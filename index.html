@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="USS Unfortunate sound effects for The Captain is Dead board game.">
+  <title>USS Unfortunate — Soundboard</title>
+  <link rel="icon" href="./favicon.ico" sizes="32x32 64x64">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="nebula-background" aria-hidden="true"></div>
+  <main class="soundboard">
+    <header>
+      <img class="spaceship" src="./assets/uss-unfortunate.png" alt="USS Unfortunate spaceship with glowing blue engines" width="810" height="540">
+      <h1 class="subtitle"><a href="./assets/deadjim.mp3" data-sound="deadjim">The Captain is Dead!</a></h1>
+    </header>
+
+    <section class="sounds" aria-label="Ship sound effects">
+      <div class="button-pair">
+        <button class="sound sound--yellow" type="button" data-sound="alert">Alert</button>
+        <button class="sound sound--yellow" type="button" data-sound="damage">Damage</button>
+      </div>
+      <button class="sound sound--red" type="button" data-sound="scanners">External Scanners</button>
+      <button class="sound sound--red" type="button" data-sound="comms">Comm System</button>
+      <button class="sound sound--red" type="button" data-sound="shields">Shields</button>
+      <button class="sound sound--yellow" type="button" data-sound="torpedo">Torpedo tube</button>
+      <button class="sound sound--orange" type="button" data-sound="teleporter">Teleporter</button>
+      <button class="sound sound--orange" type="button" data-sound="warpcore">Jump Core</button>
+      <div class="button-pair outcomes">
+        <button class="sound sound--green" type="button" data-sound="warpaway">Win</button>
+        <button class="sound sound--red" type="button" data-sound="warpcore-collapsed">Lose</button>
+      </div>
+    </section>
+
+    <footer class="playback">
+      <p id="playback-status" role="status" aria-live="polite">Ready for your command.</p>
+      <button id="stop-sound" type="button" disabled>Stop sound</button>
+    </footer>
+    <noscript><p>Enable JavaScript to play the sound effects.</p></noscript>
+  </main>
+</body>
+</html>
