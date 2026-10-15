@@ -8,6 +8,7 @@
 * { box-sizing: border-box; }
 
 body {
+  position: relative;
   margin: 0;
   min-width: 240px;
   min-height: 100vh;
@@ -46,8 +47,8 @@ body {
   display: flex;
   flex-direction: column;
   width: calc(100% - 40px);
-  height: 100vh;
-  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
   padding-block: 12px;
   margin: 0 auto;
   text-align: center;
@@ -179,16 +180,16 @@ button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
 #stop-sound:disabled { opacity: .45; cursor: default; }
 
 .github-link {
-  position: fixed;
+  position: absolute;
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 24px;
+  height: 24px;
   border: 1px solid #555;
-  border-radius: 10px;
+  border-radius: 5px;
   background: #000;
   color: #fff;
 }
@@ -196,8 +197,8 @@ button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
 .github-link:hover { background: #222; }
 .github-link:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
 
-/* Allow controls to scroll clear of the fixed link on short screens. */
-.playback { padding-bottom: 76px; }
+/* Reserve a footer area so the page-corner link never covers sound controls. */
+.playback { padding-bottom: 52px; }
 
 /* Keep the full control stack in view on shorter laptop and mobile screens. */
 @media (max-height: 800px) {
