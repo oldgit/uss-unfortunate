@@ -1,5 +1,7 @@
 # Sound Effects for the Captain is Dead
 
+This HTML page is hosted on github: [oldgit.github.io/uss-unfortunate](https://oldgit.github.io/uss-unfortunate/).
+
 A simple HTML page which has a responsive web design to render nicely on mobile and desktop.
 The page consists of buttons which when pressed use Javascript to play the mp3 files in the assets directory.
 
