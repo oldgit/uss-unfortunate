@@ -42,17 +42,56 @@ body {
 }
 
 .soundboard {
-  width: min(100% - 40px, 400px);
-  margin: 12px auto;
+  --title-line-height: 1.56rem;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 40px);
+  height: 100vh;
+  height: 100svh;
+  padding-block: 12px;
+  margin: 0 auto;
   text-align: center;
 }
 
+.soundboard > header {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  /* End half a title-line below the midpoint, accounting for page padding. */
+  height: calc(50vh - 12px + var(--title-line-height) / 2);
+  height: calc(50svh - 12px + var(--title-line-height) / 2);
+  min-height: 140px;
+}
+
+/* Keep the controls phone-width while the image can use the wider page. */
+.top-controls,
+.sounds,
+.playback {
+  flex: none;
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
 .subtitle {
-  margin: 6px 0 12px;
+  flex: none;
+  margin: 6px 0 0;
   font-size: 1.3rem;
   font-weight: 400;
-  line-height: 1.2;
+  line-height: var(--title-line-height);
   letter-spacing: -.6px;
+}
+
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 13px;
+  margin-bottom: 10px;
+}
+
+.top-controls .sound {
+  width: auto;
+  flex: 0 1 auto;
 }
 
 .subtitle a {
@@ -67,27 +106,26 @@ body {
 
 .spaceship {
   display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  /* Scale continuously so crossing the compact breakpoint cannot enlarge it abruptly. */
-  max-height: 20vh;
-  max-height: 20svh;
+  flex: 1 1 0;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  object-fit: contain;
   margin: 0 auto;
   border-radius: 14px;
-  box-shadow: 0 12px 36px #0008;
 }
 
 .sounds {
   display: grid;
   gap: 10px;
-  max-width: 320px;
+  width: 100%;
   margin-inline: auto;
+  margin-top: 12px;
 }
 
 .button-pair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 13px;
 }
 
@@ -95,6 +133,9 @@ button { font: inherit; }
 
 .sound {
   width: 100%;
+  max-width: 100%;
+  min-width: 44px;
+  text-align: center;
   min-height: 46px;
   padding: 12px 14px;
   border: 0;
@@ -117,24 +158,25 @@ button { font: inherit; }
 .sound:active { transform: translateY(2px); }
 .sound.is-playing { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #353c39; }
 button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
-.outcomes { margin-top: 0; }
+.outcomes {
+  grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
+  margin-top: 0;
+}
 
 .playback { margin-top: 12px; }
 .playback p { min-height: 1.3em; margin: 0 0 6px; color: #c5d2e6; font-size: .85rem; }
 #stop-sound {
-  padding: 8px 14px;
+  display: grid;
+  place-items: center;
+  padding: 0;
   border: 1px solid #b8bfbb;
-  border-radius: 7px;
-  background: #101c30;
-  color: #f1f5ff;
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
   cursor: pointer;
-  min-height: 40px;
+  min-height: 44px;
 }
 #stop-sound:disabled { opacity: .45; cursor: default; }
-
-@media (max-width: 400px) {
-  .sounds { max-width: 240px; }
-}
 
 /* Keep the full control stack in view on shorter laptop and mobile screens. */
 @media (max-height: 800px) {
