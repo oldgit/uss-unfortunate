@@ -15,7 +15,7 @@ However once the repo is cloned locally, the HTML can be served easily by runnin
 
 ## Further details
 
-The text "The Captain is Dead!" plays the sound: ./assets/deadjim.mp3.
+The text "The Captain is Dead" plays the sound: ./assets/deadjim.mp3.
 
 The button name to sound filename links are as follows:
 

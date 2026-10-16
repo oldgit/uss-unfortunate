@@ -1,17 +1,25 @@
 :root {
+  --viewport-height: 100vh;
   color-scheme: dark;
   font-family: Arial, Helvetica, sans-serif;
   color: #f1f5ff;
   background: #03060f;
 }
 
-* { box-sizing: border-box; }
+@supports (height: 100dvh) {
+  :root {
+    --viewport-height: 100dvh;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
 
 body {
-  position: relative;
   margin: 0;
   min-width: 240px;
-  min-height: 100vh;
+  overflow: hidden;
   isolation: isolate;
 }
 
@@ -31,37 +39,56 @@ body {
   inset: 50% 0 0;
   /* Scale proportionally and anchor the bright core (44%, 53%) at the corner.
      Both minimum sizes ensure the image covers this lower-half region. */
-  --nebula-width: max(228vw, 168vh);
+  --nebula-height-ratio: 0.5625; /* Source image height / width: 1080 / 1920. */
+  --nebula-focus-x: 0.44;
+  --nebula-focus-y: 0.53;
+  --nebula-width: max(228vw, calc(var(--viewport-height) * 1.68));
   background-image: url("./assets/nebula.jpg");
   background-repeat: no-repeat;
   background-size: var(--nebula-width) auto;
-  background-position:
-    calc(100vw - var(--nebula-width) * .44)
-    calc(50vh - var(--nebula-width) * .5625 * .53);
+  background-position: calc(100vw - var(--nebula-width) * var(--nebula-focus-x))
+    calc(
+      var(--viewport-height) * 0.5 - var(--nebula-width) *
+        var(--nebula-height-ratio) * var(--nebula-focus-y)
+    );
   mask-image: linear-gradient(to bottom, transparent, #000 40%);
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
 }
 
 .soundboard {
-  --title-line-height: 1.56rem;
-  display: flex;
-  flex-direction: column;
-  width: calc(100% - 40px);
-  min-height: 100vh;
-  min-height: 100svh;
-  padding-block: 12px;
-  margin: 0 auto;
+  /* Keep the title on one line, allowing for page padding and a scrollbar. */
+  --title-font-size: min(2.625rem, calc((100vw - 56px) / 9.4));
+  --title-line-height: calc(var(--title-font-size) * 1.2);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: 100%;
+  height: var(--viewport-height);
   text-align: center;
 }
 
-.soundboard > header {
+.soundboard-content {
   display: flex;
   flex-direction: column;
-  flex: none;
-  /* End half a title-line below the midpoint, accounting for page padding. */
-  height: calc(50vh - 12px + var(--title-line-height) / 2);
-  height: calc(50svh - 12px + var(--title-line-height) / 2);
-  min-height: 140px;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 20px;
+}
+
+.soundboard-content:focus-visible {
+  outline: 2px solid #9ecbff;
+  outline-offset: -2px;
+}
+
+.soundboard-content > header {
+  display: flex;
+  flex-direction: column;
+  /* Use spare space for the ship, but give controls and playback priority. */
+  flex: 1 0 140px;
+  max-height: calc(
+    var(--viewport-height) * 0.5 - 12px + var(--title-line-height) / 2
+  );
+  /* Keep the top controls and single-line title from being compressed. */
+  min-height: max-content;
 }
 
 /* Keep the controls phone-width while the image can use the wider page. */
@@ -76,11 +103,12 @@ body {
 
 .subtitle {
   flex: none;
-  margin: 6px 0 0;
-  font-size: 1.3rem;
+  margin: 6px 0 10px;
+  font-size: var(--title-font-size);
   font-weight: 400;
   line-height: var(--title-line-height);
-  letter-spacing: -.6px;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
 }
 
 .top-controls {
@@ -92,7 +120,6 @@ body {
 
 .top-controls .sound {
   width: auto;
-  flex: 0 1 auto;
 }
 
 .subtitle a {
@@ -102,8 +129,9 @@ body {
 }
 
 .subtitle a:hover,
-.subtitle a.is-playing { color: #a9d2ff; }
-.subtitle a:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
+.subtitle a.is-playing {
+  color: #a9d2ff;
+}
 
 .spaceship {
   display: block;
@@ -119,8 +147,6 @@ body {
 .sounds {
   display: grid;
   gap: 10px;
-  width: 100%;
-  margin-inline: auto;
   margin-top: 12px;
 }
 
@@ -130,7 +156,9 @@ body {
   gap: 13px;
 }
 
-button { font: inherit; }
+button {
+  font: inherit;
+}
 
 .sound {
   width: 100%;
@@ -146,26 +174,53 @@ button { font: inherit; }
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.25;
-  transition: filter 120ms ease, transform 120ms ease;
+  transition:
+    filter 120ms ease,
+    transform 120ms ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-.sound--yellow { background: #ffdf50; }
-.sound--orange { background: #ffbd59; }
-.sound--red { background: #d51f2b; color: #fff; }
-.sound--green { background: #79d84d; }
-.sound:hover { filter: brightness(.94); }
-.sound:active { transform: translateY(2px); }
-.sound.is-playing { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #353c39; }
-button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
+.sound--yellow {
+  background: #ffdf50;
+}
+.sound--orange {
+  background: #ffbd59;
+}
+.sound--red {
+  background: #d51f2b;
+  color: #fff;
+}
+.sound--green {
+  background: #79d84d;
+}
+.sound:hover {
+  filter: brightness(0.94);
+}
+.sound:active {
+  transform: translateY(2px);
+}
+.sound.is-playing {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 5px #353c39;
+}
+button:focus-visible,
+.subtitle a:focus-visible,
+.github-link:focus-visible {
+  outline: 3px solid #9ecbff;
+  outline-offset: 5px;
+}
 .outcomes {
   grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
-  margin-top: 0;
 }
 
-.playback { margin-top: 12px; }
-.playback p { min-height: 1.3em; margin: 0 0 6px; color: #c5d2e6; font-size: .85rem; }
+.playback {
+  margin-block: 12px 6px;
+  min-height: 1.3em;
+  color: #c5d2e6;
+  font-size: 0.85rem;
+}
 #stop-sound {
   display: grid;
   place-items: center;
@@ -177,35 +232,46 @@ button:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
   cursor: pointer;
   min-height: 44px;
 }
-#stop-sound:disabled { opacity: .45; cursor: default; }
+#stop-sound:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom)) 16px;
+}
 
 .github-link {
-  position: absolute;
-  right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
-  z-index: 1;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   border: 1px solid #555;
-  border-radius: 5px;
+  border-radius: 8px;
   background: #000;
   color: #fff;
 }
 
-.github-link:hover { background: #222; }
-.github-link:focus-visible { outline: 3px solid #9ecbff; outline-offset: 5px; }
-
-/* Reserve a footer area so the page-corner link never covers sound controls. */
-.playback { padding-bottom: 52px; }
+.github-link:hover {
+  background: #222;
+}
 
 /* Keep the full control stack in view on shorter laptop and mobile screens. */
 @media (max-height: 800px) {
-  .sounds { gap: 8px; }
-  .sound { min-height: 44px; padding-block: 10px; }
+  .sounds {
+    gap: 8px;
+  }
+  .sound {
+    min-height: 44px;
+    padding-block: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sound { transition: none; }
+  .sound {
+    transition: none;
+  }
 }
